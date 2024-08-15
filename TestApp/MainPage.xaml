@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TestApp.Controls"
+             xmlns:models="clr-namespace:TestApp.Models"
+             xmlns:vm="clr-namespace:TestApp.ViewModels"
+             x:Class="TestApp.MainPage"
+             Background="Black"
+             x:DataType="vm:FeedViewModel">
+    <ContentPage.Resources>
+        
+        <DataTemplate x:Key="FeedViralTemplate" x:DataType="models:FeedItem">
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="Orange">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Image Grid.Row="0" Grid.Column="0" Source="{Binding News.Slides[0].Image}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="FeedNewsTemplate" x:DataType="models:FeedItem">
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Background="Green">
+                <CarouselView ItemsSource="{Binding News.Slides}">
+                    <CarouselView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal"
+                                           SnapPointsType="MandatorySingle"
+                                           SnapPointsAlignment="Center">
+                        </LinearItemsLayout>
+                    </CarouselView.ItemsLayout>
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Slide">
+                            <Image Source="{Binding Image}" Aspect="AspectFill" HorizontalOptions="Fill" VerticalOptions="Fill"/>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+            </Grid>
+        </DataTemplate>
+        
+        <controls:FeedDataTemplateSelector 
+            x:Key="FeedTemplateSelector"
+            FeedViralTemplate="{StaticResource FeedViralTemplate}"
+            FeedNewsTemplate="{StaticResource FeedNewsTemplate}"
+        />
+    </ContentPage.Resources>
+    <AbsoluteLayout x:Name="AbsoluteLayout" IgnoreSafeArea="True">
+        <CollectionView AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                          x:Name="FeedCollectionView"
+                          VerticalScrollBarVisibility="Never"
+                          ItemTemplate="{StaticResource FeedTemplateSelector}"
+                          ItemsSource="{Binding FeedItems}"
+                          HorizontalOptions="FillAndExpand"
+                          VerticalOptions="FillAndExpand"
+                          Background="White">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   SnapPointsType="MandatorySingle"
+                                   SnapPointsAlignment="Start"> 
+                </LinearItemsLayout>
+            </CollectionView.ItemsLayout>
+        </CollectionView>
+    </AbsoluteLayout>
+</ContentPage>
